@@ -41,3 +41,20 @@ Informações técnica
 - Framework Symfony 3.4
 
 
+Controle das Rotas
+
+app_appbankaccount_index        GET      ANY      ANY    /user/{id}/bank_account
+app_appbankaccount_showbank     GET      ANY      ANY    /user/{user_id}/bank_account/{bank_id}
+app_appbankaccount_savebank     POST     ANY      ANY    /user/{user_id}/bank_account
+app_appbankaccount_updatebank   POST     ANY      ANY    /user/{user_id}/bank_account/{bank_id}
+app_appbankaccount_delete       DELETE   ANY      ANY    /user/{user_id}/bank_account/{bank_id}
+app_appbank_index               GET      ANY      ANY    /bank/
+app_appbank_show                GET      ANY      ANY    /bank/{id}
+app_appuser_index               GET      ANY      ANY    /user/
+app_appuser_show                GET      ANY      ANY    /user/{id}
+app_appuser_save                POST     ANY      ANY    /user/save
+app_appuser_update              PUT      ANY      ANY    /user/update
+app_appuser_delete              DELETE   ANY      ANY    /user/{id}
+
+
+OBS: As rotas de salvar e atualizar o Usuário modifiquei para resolver um pequeno problema ("/user/save" e "/user/update")

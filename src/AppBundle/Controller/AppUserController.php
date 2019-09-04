@@ -56,7 +56,7 @@ class AppUserController extends Controller
     }
 
     /** 
-     * @Route("/")
+     * @Route("/save")
      * @Method("POST")
     */
     public function saveAction(Request $request)
@@ -88,7 +88,7 @@ class AppUserController extends Controller
     }
 
     /** 
-     * @Route("/")
+     * @Route("/update")
      * @Method("PUT")
     */
     public function updateAction(Request $request)
