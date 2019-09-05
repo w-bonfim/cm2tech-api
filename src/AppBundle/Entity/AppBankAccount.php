@@ -26,42 +26,42 @@ class AppBankAccount
     /**
      * @var string
      *
-     * @ORM\Column(name="account_name", type="string", length=70)
+     * @ORM\Column(name="account_name", type="string", length=70, nullable=true)
      */
     private $accountName;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="agency", type="string", length=5)
+     * @ORM\Column(name="agency", type="string", length=5, nullable=true)
      */
     private $agency;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="agency_digit", type="string", length=1)
+     * @ORM\Column(name="agency_digit", type="string", length=1, nullable=true)
      */
     private $agencyDigit;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="account_number", type="string", length=13)
+     * @ORM\Column(name="account_number", type="string", length=13, nullable=true)
      */
     private $accountNumber;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="account_digit", type="string", length=1)
+     * @ORM\Column(name="account_digit", type="string", length=1, nullable=true)
      */
     private $accountDigit;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="account_type", type="string", length=100)
+     * @ORM\Column(name="account_type", type="string", length=100, nullable=true)
      */
     private $accountType;
     
@@ -72,15 +72,15 @@ class AppBankAccount
     private $app_user_id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\AppBank", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\AppBank")
      * @ORM\JoinColumn(name="app_bank_id", referencedColumnName="id")
      */
     private $app_bank_id;
 
-    // public function __construct()
-    // {
-    //     $this->app_bank_id = new ArrayCollection();
-    // }
+    public function __construct()
+    {
+        $this->app_bank_id = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -265,7 +265,7 @@ class AppBankAccount
     /**
      * Set appBankId.
      *
-     * @param \AppBundle\Entity\AppBank $appBankId
+     * @param \AppBundle\Entity\AppBank|null $appBankId
      *
      * @return AppBankAccount
      */
@@ -284,5 +284,31 @@ class AppBankAccount
     public function getAppBankId()
     {
         return $this->app_bank_id;
+    }
+
+    /**
+     * Add appBankId.
+     *
+     * @param \AppBundle\Entity\AppBank $appBankId
+     *
+     * @return AppBankAccount
+     */
+    public function addAppBankId(\AppBundle\Entity\AppBank $appBankId)
+    {
+        $this->app_bank_id[] = $appBankId;
+
+        return $this;
+    }
+
+    /**
+     * Remove appBankId.
+     *
+     * @param \AppBundle\Entity\AppBank $appBankId
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeAppBankId(\AppBundle\Entity\AppBank $appBankId)
+    {
+        return $this->app_bank_id->removeElement($appBankId);
     }
 }

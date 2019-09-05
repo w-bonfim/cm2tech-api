@@ -23,13 +23,8 @@ class AppBankController extends Controller
     */
     public function indexAction(Request $request) 
     { 
-        $em = $this->getDoctrine()
-                    ->getRepository('AppBundle:AppBank')
-                    ->createQueryBuilder('b');
-
-        $query = $em->select('b.name')
-                    ->getQuery()
-                    ->getResult();
+        $em   = $this->getDoctrine();
+        $query = $em->getRepository('AppBundle:AppBank')->findAll();
         
         $paginator = $this->get('knp_paginator');
 
@@ -48,13 +43,16 @@ class AppBankController extends Controller
      * @Route("/{id}")
      * @Method("GET")
     */
-    public function showAction(AppBank $id)
+    public function showAction($id)
     {
-        if(!$id){
-            return new JsonResponse(array('status'=>false,'msg'=>'Usuário não encontrado.'), 404);
+        $em   = $this->getDoctrine();
+        $bank = $em->getRepository('AppBundle:AppBank')->find($id);
+
+        if(!$bank){
+            return new JsonResponse(array('status'=>false,'msg'=>'Banco não encontrado.'), 404);
         }
         
-        $bank = $this->get('jms_serializer')->serialize($id, 'json');
+        $bank = $this->get('jms_serializer')->serialize($bank, 'json');
 
         return new Response($bank);
     }

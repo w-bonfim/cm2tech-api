@@ -10,4 +10,12 @@ namespace AppBundle\Repository;
  */
 class AppBankRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findBankIn($fields)
+    {
+       return $this->createQueryBuilder('b')
+                ->where('b.id in(:ids)')
+                ->setParameter('ids', array_values($fields))
+                ->getQuery()
+                ->getResult(); 
+    }
 }

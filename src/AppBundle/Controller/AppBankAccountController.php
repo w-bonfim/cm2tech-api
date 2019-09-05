@@ -46,27 +46,21 @@ class AppBankAccountController extends Controller
     */
     public function showBankAction($user_id, $bank_id) 
     {  
-        $em   = $this->getDoctrine();
-        $user = $em->getRepository('AppBundle:AppUser')->find($user_id);
-        $bank = $em->getRepository('AppBundle:AppBank')->find($bank_id);
+        $em        = $this->getDoctrine();
+        $user      = $em->getRepository('AppBundle:AppUser')->find($user_id);
+        $bank_user = $em->getRepository('AppBundle:AppBankAccount')->find($bank_id);
         
         if(!$user){
             return new JsonResponse(array('status'=>false,'msg'=>'Usuário não encontrado.'), 404);
         }
 
-        if(!$bank){
-            return new JsonResponse(array('status'=>false,'msg'=>'Banco não encontrado.'), 404);
+        if(!$bank_user){
+            return new JsonResponse(array('status'=>false,'msg'=>'Conta bancária não encontrada.'), 404);
         }
 
-        $query = $em->getRepository('AppBundle:AppBankAccount')
-                        ->findOneBy([
-                            'app_user_id' => $user_id,
-                            'app_bank_id' => $bank_id
-                        ]);
-                   
-        $back_user = $this->get('jms_serializer')->serialize($query, 'json');
-        
-        return new JsonResponse($back_user);
+        $bank_user = $this->get('jms_serializer')->serialize($bank_user, 'json');
+
+        return new Response($bank_user);
     }
 
     /** 
@@ -84,21 +78,25 @@ class AppBankAccountController extends Controller
 
         $data = $request->getContent();
         parse_str($data, $field);
-
+        
         if(!isset($field['app_user_id'])){
             $field['app_user_id'] = $user_id;
+        }
+
+        if(!isset($field['accountName'])){
+            return new JsonResponse(array('status'=>false,'msg'=>'O nome da conta bancária é obrigatório.'), 404);
         }
 
         if(!isset($field['app_bank_id'])){
             return new JsonResponse(array('status'=>false,'msg'=>'Por favor, selecione uma conta bancária.'), 404);
         }
-
-        $bank = $em->getRepository('AppBundle:AppBank')->find($field['app_bank_id']);
-
+        
+        $bank = $em->getRepository('AppBundle:AppBank')->findBankIn($field['app_bank_id']);
+        
         if(!$bank){
             return new JsonResponse(array('status'=>false,'msg'=>'Banco não encontrado.'), 404);
         }
-
+        
         $user_bank = new AppBankAccount();
         $form = $this->createForm(AppBankAccountType::class, $user_bank);
         $form->submit($field);
@@ -121,21 +119,13 @@ class AppBankAccountController extends Controller
         
         $em   = $this->getDoctrine();
         $user = $em->getRepository('AppBundle:AppUser')->find($user_id);
-        $bank = $em->getRepository('AppBundle:AppBank')->find($bank_id);
         
         if(!$user){
             return new JsonResponse(array('status'=>false,'msg'=>'Usuário não encontrado.'), 404);
         }
 
-        if(!$bank){
-            return new JsonResponse(array('status'=>false,'msg'=>'Banco não encontrado.'), 404);
-        }
-
         $bank_user = $em->getRepository('AppBundle:AppBankAccount')
-                        ->findOneBy([
-                            'app_user_id' => $user_id,
-                            'app_bank_id' => $bank_id
-                        ]);
+                        ->findOneBy(['id' => $bank_id]);
 
         if(count($bank_user) < 1){
             return new JsonResponse(array('status'=>false,'msg'=>'Conta bancária não encontrada.'), 404);
@@ -167,20 +157,12 @@ class AppBankAccountController extends Controller
     {    
         $em   = $this->getDoctrine();
         $user = $em->getRepository('AppBundle:AppUser')->find($user_id);
-        $bank = $em->getRepository('AppBundle:AppBank')->find($bank_id);
-        
+                
         if(!$user){
             return new JsonResponse(array('status'=>false,'msg'=>'Usuário não encontrado.'), 404);
         }
 
-        if(!$bank){
-            return new JsonResponse(array('status'=>false,'msg'=>'Banco não encontrado.'), 404);
-        }
-
-        $bank_user = $em->getRepository('AppBundle:AppBankAccount')->findOneBy([
-                                                                        'app_user_id' => $user_id,
-                                                                        'app_bank_id' => $bank_id
-                                                                    ]);
+        $bank_user = $em->getRepository('AppBundle:AppBankAccount')->findOneBy(['id' => $bank_id]);
 
         if(count($bank_user) < 1){
             return new JsonResponse(array('status'=>false,'msg'=>'Conta bancária não encontrada.'), 404);

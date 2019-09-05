@@ -42,13 +42,16 @@ class AppUserController extends Controller
      * @Route("/user/{id}")
      * @Method("GET")
     */
-    public function showAction(AppUser $id)
+    public function showAction($id)
     {
-        if(!$id){
+        $em   = $this->getDoctrine();
+        $user = $em->getRepository('AppBundle:AppUser')->find($id);
+
+        if(!$user){
             return new JsonResponse(array('status'=>false,'msg'=>'Usuário não encontrado.'), 404);
         }
         
-        $user = $this->get('jms_serializer')->serialize($id, 'json');
+        $user = $this->get('jms_serializer')->serialize($user, 'json');
 
         return new Response($user);
     }
@@ -128,8 +131,15 @@ class AppUserController extends Controller
      * @Route("/user/{id}")
      * @Method("DELETE")
     */
-    public function deleteAction(AppUser $user)
+    public function deleteAction($id)
     {      
+        $em   = $this->getDoctrine();
+        $user = $em->getRepository('AppBundle:AppUser')->find($id);
+
+        if(!$user){
+            return new JsonResponse(array('status'=>false,'msg'=>'Usuário não encontrado.'), 404);
+        }
+
         $em = $this->getDoctrine()->getManager();
         $em->remove($user);
         $em->flush();
