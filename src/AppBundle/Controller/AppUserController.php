@@ -11,13 +11,11 @@ use AppBundle\Form\AppUserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-/**
- * @Route("/user")
-*/
+
 class AppUserController extends Controller
 {
     /** 
-     * @Route("/")
+     * @Route("/user")
      * @Method("GET")
     */
     public function indexAction(Request $request) 
@@ -41,7 +39,7 @@ class AppUserController extends Controller
     }
 
     /** 
-     * @Route("/{id}")
+     * @Route("/user/{id}")
      * @Method("GET")
     */
     public function showAction(AppUser $id)
@@ -56,9 +54,9 @@ class AppUserController extends Controller
     }
 
     /** 
-     * @Route("/save")
+     * @Route("/user")
      * @Method("POST")
-    */
+     */
     public function saveAction(Request $request)
     {    
         $data = $request->getContent();
@@ -88,7 +86,7 @@ class AppUserController extends Controller
     }
 
     /** 
-     * @Route("/update")
+     * @Route("/user")
      * @Method("PUT")
     */
     public function updateAction(Request $request)
@@ -127,7 +125,7 @@ class AppUserController extends Controller
     }
 
     /** 
-     * @Route("/{id}")
+     * @Route("/user/{id}")
      * @Method("DELETE")
     */
     public function deleteAction(AppUser $user)
